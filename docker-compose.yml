@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: doctor_payments_ml_db
+    environment:
+      POSTGRES_DB: doctor_payments_demo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: doctor_payments_ml_web
+    environment:
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/doctor_payments_demo
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+
+volumes:
+  postgres_data:
